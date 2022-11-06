@@ -47,11 +47,19 @@ class TreeEditor(QGraphicsScene):
 
     self.tree = tree
 
+    self.initTree()
+
+  def updateTree(self, tree):
+    self.tree = tree
+    self.clear()
+    self.initTree()
+
+  def initTree(self):
     offset = np.array([10, 10]) # margin to the scene origin
-    padding = np.array([50, 20]) # margin between tree nodes
+    padding = np.array([50, 10]) # margin between tree nodes
 
     parent_position = offset.copy()
-    for k, v in tree.items():
+    for k, v in self.tree.items():
       # create parent node
       parent_node = SceneTreeNode(0, 0, k)
       parent_rect = parent_node.boundingRect()

@@ -23,11 +23,12 @@ class SceneTreeNode(QGraphicsRectItem):
     self.setBrush(brush)
 
     self.text_item = QGraphicsTextItem(text, self)
-    self.text_item.setPos(x,y)
+    self.text_item.setPos(0,0)
     self.text_item.setDefaultTextColor(Qt.white)
 
     bounds = self.text_item.boundingRect()
     self.setRect(bounds)
+    self.setPos(x,y)
     self.setFlags(QGraphicsItem.ItemIsSelectable)
 
 
@@ -55,13 +56,20 @@ class TreeEditor(QGraphicsScene):
     self.initTree()
 
   def initTree(self):
-    offset = np.array([10, 10]) # margin to the scene origin
+    offset = np.array([20, 15]) # margin to the scene origin
     padding = np.array([50, 10]) # margin between tree nodes
+
+    # add invisible rectangle to enforce margin
+    invis = QColor()
+    invis.setRgba(0x00FFFFFF)
+    margin_rect = QGraphicsRectItem(0,0, offset[0], offset[1])
+    margin_rect.setBrush(invis)
+    self.addItem(margin_rect)
 
     parent_position = offset.copy()
     for k, v in self.tree.items():
       # create parent node
-      parent_node = SceneTreeNode(0, 0, k)
+      parent_node = SceneTreeNode(offset[0], offset[1], k)
       parent_rect = parent_node.boundingRect()
 
       # create child nodes
